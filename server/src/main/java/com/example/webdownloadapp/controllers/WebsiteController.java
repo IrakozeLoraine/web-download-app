@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.URL;
 import java.util.List;
 
 @RestController
@@ -35,8 +36,9 @@ public class WebsiteController {
     }
 
     @PostMapping()
-    public ResponseEntity<APIResponse> createWebsite(@Valid @RequestBody WebsiteDto linkDto) throws Exception {
-        Website website = websiteService.saveWebsite(linkDto);
+    public ResponseEntity<APIResponse> createWebsite(@Valid @RequestBody WebsiteDto websiteDto) throws Exception {
+        URL url = new URL(websiteDto.getUrl());
+        Website website = websiteService.saveWebsite(url);
         return ResponseEntity.ok().body(new APIResponse(HttpStatus.OK, "SUCCESSFULLY RECORDED", website));
     }
 }

@@ -41,8 +41,9 @@ public class WebsiteController {
         String websiteUrl = request.getParameter("websiteUrl");
 
         if (Validation.isValidURL(websiteUrl)) {
-            WebsiteEntry websiteEntry  = Downloading.DownloadWebPage(websiteUrl);
-            saveWebsiteRecord(websiteEntry, model);
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<ResponseDTO> responseEntity = restTemplate.postForEntity(url + "/websites", websiteUrl, ResponseDTO.class);
+            model.addAttribute("website", responseEntity.getBody().getData());
 
         return "redirect:/websites";
         } else {
@@ -50,14 +51,5 @@ public class WebsiteController {
                     "This URL link seems to be invalid. Please Check again");
             return "redirect:/";
         }
-    }
-
-    public void saveWebsiteRecord(WebsiteEntry websiteEntry, Model model) {
-        RestTemplate restTemplate = new RestTemplate();
-
-        ResponseEntity<ResponseDTO> responseEntity = restTemplate.postForEntity(url + "/websites", websiteEntry, ResponseDTO.class);
-
-        model.addAttribute("website", responseEntity.getBody().getData());
-
     }
 }
