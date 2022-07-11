@@ -6,51 +6,75 @@ import com.example.webdownloadapp.exceptions.ResourceNotFoundException;
 import com.example.webdownloadapp.models.Link;
 import com.example.webdownloadapp.models.Website;
 import com.example.webdownloadapp.repositories.ILinkRepository;
+import com.example.webdownloadapp.repositories.IWebsiteRepository;
 import com.example.webdownloadapp.services.ILinkService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @Primary
 public class LinkService implements ILinkService {
-
     private final ILinkRepository linkRepository;
-    private final WebsiteService websiteService;
 
-    public LinkService(ILinkRepository linkRepository, WebsiteService websiteService) {
+    @Autowired
+    private IWebsiteRepository websiteRepository;
+
+    public LinkService(ILinkRepository linkRepository) {
         this.linkRepository = linkRepository;
-        this.websiteService = websiteService;
     }
 
     @Override
     public Link saveLink(LinkDto linkDto) throws Exception {
-        if (linkDto.getName().equals("")){
-            throw new RequiredFieldException("name", "link");
-        }
-        if (linkDto.getTotalDownloadedKilobytes().equals("")){
-            throw new RequiredFieldException("total downloaded kilobytes", "link");
-        }
-        if (linkDto.getTotalElapsedTime().equals("")){
-            throw new RequiredFieldException("total elapsed time", "link");
-        }
-        if (linkDto.getWebsiteId().equals("")){
-            throw new RequiredFieldException("website id", "link");
-        }
+        Link link = new Link();
 
-        Optional<Website> website = websiteService.getWesiteById(linkDto.getWebsiteId());
+        String filePath= linkDto.getPath() + "/index.html";
+        link.setName(linkDto.getUrl().getFile());
+        link.setWebsite(linkDto.getWebsite());
 
-        if (website.isEmpty()) throw new ResourceNotFoundException("Website", "id");
 
-        return linkRepository.save(new Link(linkDto.getName(), linkDto.getTotalDownloadedKilobytes(), linkDto.getTotalElapsedTime(), website.get()));
+        Long start = System.currentTimeMillis();
+
+
+        if (!linkDto.getUrl().getFile().toString().contains("?")) {
+            BufferedReader readr =
+                    new BufferedReader(new InputStreamReader(linkDto.getUrl().openStream()));
+
+            // Enter filename in which you want to download
+            BufferedWriter writer =
+                    new BufferedWriter(new FileWriter(filePath));
+
+            // read each line from stream till end
+            String line;
+            while ((line = readr.readLine()) != null) {
+                writer.write(line);
+            }
+
+            readr.close();
+            writer.close();
+            long end = System.currentTimeMillis();
+            long timeElapsed = end - start;
+            link.setTotalElapsedTime(timeElapsed);
+
+            link.setTotalDownloadedKilobytes(Files.size(Paths.get(filePath)) / 1024);
+            return linkRepository.save(link);
+        }
+        return null;
     }
 
     @Override
-    public List<Link> getLinksByWebsite(Long id) throws Exception {
-        Optional<Website> website = websiteService.getWesiteById(id);
-        if (website.isEmpty()) throw new ResourceNotFoundException("Website", "id");
-        return linkRepository.findByWebsite(website.get());
+    public List<Link> findByWebsite(Long websiteId) {
+        Website website = websiteRepository.findById(websiteId).get();
+
+        return linkRepository.findByWebsite(website);
     }
 }

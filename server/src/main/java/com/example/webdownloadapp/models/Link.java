@@ -25,11 +25,11 @@ public class Link {
     @ManyToOne
     Website website;
 
-    private String totalElapsedTime;
-    private String totalDownloadedKilobytes;
+    private Long totalElapsedTime;
+    private Long totalDownloadedKilobytes;
 
 
-    public Link(String name, String totalDownloadedKilobytes, String totalElapsedTime, Website website) {
+    public Link(String name, Long totalDownloadedKilobytes, Long totalElapsedTime, Website website) {
         this.name = name;
         this.totalDownloadedKilobytes = totalDownloadedKilobytes;
         this.totalElapsedTime = totalElapsedTime;

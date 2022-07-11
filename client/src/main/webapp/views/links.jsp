@@ -9,7 +9,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Websites</title>
+    <title>Links</title>
     <%@ include file="../components/Header.jsp" %>
 </head>
 <body>
@@ -22,13 +22,10 @@
                     <thead class="border-b">
                     <tr>
                         <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                            Link name
+                        </th>
+                        <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
                             Website name
-                        </th>
-                        <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                            Start time
-                        </th>
-                        <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                            End time
                         </th>
                         <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
                             Total Elapsed time
@@ -39,22 +36,17 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach items="${websites}" var="website">
+                    <c:forEach items="${links}" var="link">
                     <tr class="border-b">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            <a href="/links/${website.id}">${website.websiteName}</a>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${link.name}</td>
+                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                                ${link.website.websiteName}
                         </td>
                         <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                ${website.downloadStartDateTime}
+                                ${link.totalElapsedTime}
                         </td>
                         <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                        ${website.downloadEndDateTime}
-                        </td>
-                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                ${website.totalElapsedTime}
-                        </td>
-                        <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                ${website.totalDownloadedKilobytes}
+                                ${link.totalDownloadedKilobytes}
                         </td>
                     </tr>
                     </c:forEach>

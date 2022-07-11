@@ -1,6 +1,7 @@
 package com.example.webdownloadapp.services;
 
 import com.example.webdownloadapp.dto.WebsiteDto;
+import com.example.webdownloadapp.models.Link;
 import com.example.webdownloadapp.models.Website;
 
 import java.util.List;
@@ -10,5 +11,6 @@ public interface IWebsiteService {
     Website getWebsiteByName(String name);
     Website saveWebsite(WebsiteDto websiteDto) throws Exception;
     Optional<Website> getWesiteById(Long id);
-    public List<Website> getAllWebsites();
+    List<Website> getAllWebsites();
+    List<Link> findLinksByWebsite(Long websiteId);
 }
