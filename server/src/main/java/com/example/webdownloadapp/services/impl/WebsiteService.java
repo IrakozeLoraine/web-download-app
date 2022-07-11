@@ -147,6 +147,7 @@ public class WebsiteService implements IWebsiteService {
             }
             linkService.saveLink(linkDTO);
         }
+        System.out.println("Website successfully downloaded");
         return saved;
     }
 

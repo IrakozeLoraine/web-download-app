@@ -10,7 +10,7 @@
 
 <html>
 <head>
-    <title>Dashboard</title>
+    <title>WDM</title>
     <%@ include file="../components/Header.jsp" %>
 </head>
 <body>
