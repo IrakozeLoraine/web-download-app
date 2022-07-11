@@ -26,7 +26,7 @@ import java.util.*;
 @Primary
 public class WebsiteService implements IWebsiteService {
 
-    private String savingPath = "";
+    private String savingPath = "src/main/resources/static/websites/";
     private final IWebsiteRepository websiteRepository;
 
     public WebsiteService(IWebsiteRepository websiteRepository) {
@@ -63,6 +63,11 @@ public class WebsiteService implements IWebsiteService {
 
         createFolder(linksPath);
 
+//        boolean fileDirectory = new File( savingPath+ url.getHost()).mkdir();
+
+//        File file = new File("src/main/resources/static/websites/" + url.getHost() + "/" + url.getHost() + ".html");
+
+
         BufferedReader readr =
                 new BufferedReader(new InputStreamReader(url.openStream()));
 
@@ -95,6 +100,7 @@ public class WebsiteService implements IWebsiteService {
 
     public void createFolder(String path){
         File pathAsFile = new File(path);
+
         if (!Files.exists(Paths.get(path))) {
             pathAsFile.mkdirs();
         }
