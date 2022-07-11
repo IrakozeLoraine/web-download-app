@@ -15,7 +15,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
@@ -27,6 +26,8 @@ import java.util.*;
 @Service
 @Primary
 public class WebsiteService implements IWebsiteService {
+
+    private String savingPath = "src/main/resources/static/websites/";
     private final IWebsiteRepository websiteRepository;
     private final ILinkService linkService;
     private String savingPath = "src/main/resources/static/websites/";
@@ -155,4 +156,22 @@ public class WebsiteService implements IWebsiteService {
     public Optional<Website> getWesiteById(Long id) {
         return websiteRepository.findById(id);
     }
+
+    public void createFolder(String path){
+        File pathAsFile = new File(path);
+
+        if (!Files.exists(Paths.get(path))) {
+            pathAsFile.mkdirs();
+        }
+    }
+    // public static Set<String> findLinks(String url) throws IOException {
+    //     Set<String> links = new HashSet<>();
+    //     Document doc = Jsoup.connect(url).get();
+    //     Elements elements = doc.select("a[href]");
+    //     for (Element element : elements) {
+    //         links.add(element.attr("href"));
+    //     }
+    //     return links;
+    // }
+
 }
